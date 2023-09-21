@@ -39,9 +39,30 @@ int main()
     {
       th.join();
     }
+    ths.clear();
+    ths.push_back(std::thread(&Filter_coarse, Temp_data[0], Temp_data[1], 0, FILTER_WIDTH / 2));
+    ths.push_back(std::thread(&Filter_coarse, Temp_data[0], Temp_data[1], FILTER_WIDTH / 2, FILTER_WIDTH));
 
-    Filter(Temp_data[0], Temp_data[1]);
-    Differentiate(Temp_data[1], Temp_data[2]);
+    pin_thread_to_cpu(ths[0], 0);
+    pin_thread_to_cpu(ths[1], 1);
+    for (auto &th : ths)
+    {
+      th.join();
+    }
+    // Filter_coarse(Temp_data[0], Temp_data[1], 0, FILTER_WIDTH);
+    ths.clear();
+    ths.push_back(std::thread(&Differentiate_coarse, Temp_data[1], Temp_data[2], 0, FILTER_HEIGHT / 2));
+    ths.push_back(std::thread(&Differentiate_coarse, Temp_data[1], Temp_data[2], FILTER_HEIGHT / 2, FILTER_HEIGHT));
+
+    pin_thread_to_cpu(ths[0], 0);
+    pin_thread_to_cpu(ths[1], 1);
+    for (auto &th : ths)
+    {
+      th.join();
+    }
+    
+    // Differentiate(Temp_data[1], Temp_data[2]);
+    ths.clear();
     Size = Compress(Temp_data[2], Output_data);
   }
   total_time.stop();

@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include "App.h"
 
 #define INPUT_HEIGHT (270)
 #define INPUT_WIDTH (480)
@@ -10,10 +11,10 @@
 
 unsigned Coefficients[] = {2, 15, 62, 98, 62, 15, 2};
 
-void Filter_horizontal(const unsigned char *Input, unsigned char *Output)
+void Filter_horizontal(const unsigned char *Input, unsigned char *Output, int input_start, int input_end)
 {
   for (int Y = 0; Y < INPUT_HEIGHT; Y++)
-    for (int X = 0; X < OUTPUT_WIDTH; X++)
+    for (int X = input_start; X < input_end; X++)
     {
       unsigned int Sum = 0;
       for (int i = 0; i < FILTER_LENGTH; i++)
@@ -22,10 +23,10 @@ void Filter_horizontal(const unsigned char *Input, unsigned char *Output)
     }
 }
 
-void Filter_vertical(const unsigned char *Input, unsigned char *Output)
+void Filter_vertical(const unsigned char *Input, unsigned char *Output, int input_start, int input_end)
 {
   for (int Y = 0; Y < OUTPUT_HEIGHT; Y++)
-    for (int X = 0; X < OUTPUT_WIDTH; X++)
+    for (int X = input_start; X < input_end; X++)
     {
       unsigned int Sum = 0;
       for (int i = 0; i < FILTER_LENGTH; i++)
@@ -34,12 +35,12 @@ void Filter_vertical(const unsigned char *Input, unsigned char *Output)
     }
 }
 
-void Filter(const unsigned char *Input, unsigned char *Output)
+void Filter_coarse(const unsigned char *Input, unsigned char *Output, int input_start, int input_end)
 {
   unsigned char *Temp = (unsigned char *)malloc(INPUT_HEIGHT * OUTPUT_WIDTH);
 
-  Filter_horizontal(Input, Temp);
-  Filter_vertical(Temp, Output);
+  Filter_horizontal(Input, Temp, input_start, input_end);
+  Filter_vertical(Temp, Output, input_start, input_end);
 
   free(Temp);
 }

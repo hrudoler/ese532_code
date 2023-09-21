@@ -278,6 +278,7 @@ int Code_lengths[] =
 static int Length = 0;
 static int Byte = 0;
 
+// ASK IN OH : SEGFAULT, can this be parallelized?
 int Compress(const unsigned char *Input, unsigned char *Output)
 {
   for (int i = 0; i < SIZE; i++)
@@ -299,6 +300,6 @@ int Compress(const unsigned char *Input, unsigned char *Output)
 
   if (Length % 8 > 0)
     Output[Length / 8] = Byte;
-
+  
   return Length / 8 + 1;
 }

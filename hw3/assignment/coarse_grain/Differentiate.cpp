@@ -1,9 +1,11 @@
+#include "App.h"
 #define HEIGHT (264)
 #define WIDTH (474)
 
-void Differentiate(const unsigned char *Input, unsigned char *Output)
+// need frames to be dividing up Y = the height
+void Differentiate_coarse(const unsigned char *Input, unsigned char *Output, int Y_Start_Idx, int Y_End_Idx)
 {
-  for (int Y = 0; Y < HEIGHT; Y++)
+  for (int Y = Y_Start_Idx; Y < Y_End_Idx; Y++)
     for (int X = 0; X < WIDTH; X++)
     {
       int Average = 0;
